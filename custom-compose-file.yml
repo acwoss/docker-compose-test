@@ -6,10 +6,19 @@ services:
     restart: always
     labels:
       - traefik.enable=true
-      - traefik.http.routers.next-app.rule=Host(`next.woss.tech`)
-      - traefik.http.routers.next-app.entrypoints=websecure
-      - traefik.http.routers.next-app.tls.certResolver=letsencrypt
-      - traefik.http.services.next-app.loadbalancer.server.port=80
-  # Add more containers below (nginx, postgres, etc.)
-# Define a network, which allows containers to communicate
-# with each other, by using their container name as a hostname
+      
+      # Roteador HTTP -> Redireciona
+      - traefik.http.routers.next-app-http.rule=Host(`next.woss.tech`)
+      - traefik.http.routers.next-app-http.entrypoints=web
+      # Usa o middleware de redirecionamento (o Dokploy costuma criar um)
+      - traefik.http.routers.next-app-http.middlewares=dokploy-redirect-to-https@docker
+      
+      # Roteador HTTPS -> Serve o conteúdo
+      - traefik.http.routers.next-app-https.rule=Host(`next.woss.tech`)
+      - traefik.http.routers.next-app-https.entrypoints=websecure
+      - traefik.http.routers.next-app-https.tls.certResolver=letsencrypt
+      
+      # Serviço (aonde o HTTPS aponta)
+      - traefik.http.services.next-app-svc.loadbalancer.server.port=80
+      # Linka o roteador HTTPS ao serviço
+      - traefik.http.routers.next-app-https.service=next-app-svc
