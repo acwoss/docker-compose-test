@@ -1,27 +1,38 @@
-version: "3"
-
 services:
-  next-app:
-    image: nginx:alpine
-    restart: always
+  netdata:
+    image: netdata/netdata
+    pid: host
+    network_mode: host
+    restart: unless-stopped
+    cap_add:
+      - SYS_PTRACE
+      - SYS_ADMIN
+    security_opt:
+      - apparmor:unconfined
+    volumes:
+      - netdataconfig:/etc/netdata
+      - netdatalib:/var/lib/netdata
+      - netdatacache:/var/cache/netdata
+      - /:/host/root:ro,rslave
+      - /etc/passwd:/host/etc/passwd:ro
+      - /etc/group:/host/etc/group:ro
+      - /etc/localtime:/etc/localtime:ro
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /etc/os-release:/host/etc/os-release:ro
+      - /var/log:/host/var/log:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /run/dbus:/run/dbus:ro
     labels:
       - traefik.enable=true
-      
-      # Roteador HTTP -> Redireciona
-      - traefik.http.routers.next-app-http.rule=Host(`next.woss.tech`)
-      - traefik.http.routers.next-app-http.entrypoints=web
-      # Usa o middleware de redirecionamento (o Dokploy costuma criar um)
-      - traefik.http.routers.next-app-http.middlewares=dokploy-redirect-to-https@docker
-      
-      # Roteador HTTPS -> Serve o conteúdo
-      - traefik.http.routers.next-app-https.rule=Host(`next.woss.tech`)
-      - traefik.http.routers.next-app-https.entrypoints=websecure
-      - traefik.http.routers.next-app-https.tls.certResolver=letsencrypt
-      
-      # Serviço (aonde o HTTPS aponta)
-      - traefik.http.services.next-app-svc.loadbalancer.server.port=80
-      # Linka o roteador HTTPS ao serviço
-      - traefik.http.routers.next-app-https.service=next-app-svc
+      - traefik.http.routers.netdata-http.rule=Host(`next.woss.tech`)
+      - traefik.http.routers.netdata-http.entrypoints=web
+      - traefik.http.routers.netdata-http.middlewares=dokploy-redirect-to-https@docker
+      - traefik.http.routers.netdata-https.rule=Host(`next.woss.tech`)
+      - traefik.http.routers.netdata-https.entrypoints=websecure
+      - traefik.http.routers.netdata-https.tls.certResolver=letsencrypt
+      - traefik.http.services.netdata-svc.loadbalancer.server.port=19999
+      - traefik.http.routers.netdata-https.service=netdata-svc
     networks:
       - dokploy-network
 networks:
