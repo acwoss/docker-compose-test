@@ -14,7 +14,7 @@ services:
       
     # labels:
     #   - traefik.enable=true
-    #   - traefik.http.routers.next-app.rule=Host(`next-app.dokploy.com`)
+    #   - traefik.http.routers.next-app.rule=Host(`next.woss.tech`)
     #   - traefik.http.routers.next-app.entrypoints=websecure
     #   - traefik.http.routers.next-app.tls.certResolver=letsencrypt
     #   - traefik.http.services.next-app.loadbalancer.server.port=3000
