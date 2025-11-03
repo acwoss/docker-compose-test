@@ -22,3 +22,8 @@ services:
       - traefik.http.services.next-app-svc.loadbalancer.server.port=80
       # Linka o roteador HTTPS ao serviço
       - traefik.http.routers.next-app-https.service=next-app-svc
+    networks:
+      - dokploy-proxy
+networks:
+  dokploy-proxy:
+    external: true
