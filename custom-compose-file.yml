@@ -37,3 +37,8 @@ services:
 networks:
   dokploy-network:
     external: true
+volumes:
+  netdataconfig:
+  netdatalib:
+  netdatacache:
+
