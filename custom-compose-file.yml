@@ -24,14 +24,14 @@ services:
       - /run/dbus:/run/dbus:ro
     labels:
       - traefik.enable=true
-      - traefik.http.routers.netdata-http.rule=Host(`next.woss.tech`)
-      - traefik.http.routers.netdata-http.entrypoints=web
-      - traefik.http.routers.netdata-http.middlewares=dokploy-redirect-to-https@docker
-      - traefik.http.routers.netdata-https.rule=Host(`next.woss.tech`)
-      - traefik.http.routers.netdata-https.entrypoints=websecure
-      - traefik.http.routers.netdata-https.tls.certResolver=letsencrypt
-      - traefik.http.services.netdata-svc.loadbalancer.server.port=19999
-      - traefik.http.routers.netdata-https.service=netdata-svc
+      - traefik.http.routers.next-app-http.rule=Host(`next.woss.tech`)
+      - traefik.http.routers.next-app-http.entrypoints=web
+      - traefik.http.routers.next-app-http.middlewares=dokploy-redirect-to-https@docker
+      - traefik.http.routers.next-app-https.rule=Host(`next.woss.tech`)
+      - traefik.http.routers.next-app-https.entrypoints=websecure
+      - traefik.http.routers.next-app-https.tls.certResolver=letsencrypt
+      - traefik.http.services.next-app-svc.loadbalancer.server.port=19999
+      - traefik.http.routers.next-app-https.service=next-app-svc
     networks:
       - dokploy-network
 networks:
