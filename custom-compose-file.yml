@@ -2,15 +2,10 @@ version: "3"
 
 services:
   next-app:
-    build:
-      context: ./next-app
-      dockerfile: prod.Dockerfile
-      args:
-        ENV_VARIABLE: ${ENV_VARIABLE}
-        NEXT_PUBLIC_ENV_VARIABLE: ${NEXT_PUBLIC_ENV_VARIABLE}
+    image: nginx:alpine
     restart: always
     ports:
-      - 3000
+      - 80
       
     labels:
       - traefik.enable=true
