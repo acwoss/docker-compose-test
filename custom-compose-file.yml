@@ -23,7 +23,7 @@ services:
       # Linka o roteador HTTPS ao serviço
       - traefik.http.routers.next-app-https.service=next-app-svc
     networks:
-      - dokploy-proxy
+      - dokploy-network
 networks:
-  dokploy-proxy:
+  dokploy-network:
     external: true
